@@ -17,7 +17,8 @@
   :root{
     --bg:#0b0d12; --panel:#141821; --panel2:#1b2130; --line:#252c3b;
     --text:#e8ecf4; --muted:#93a0b8; --dim:#5f6b83;
-    --ok:#35c98a; --bad:#ff5c6c; --accent:#4da3ff; --warn:#e8b23a;
+    --ok:#35c98a; --bad:#ff5c6c; --accent:#4da3ff; --warn:#e8b23a; --gold:#e8b23a;
+    --fs:1;
     --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -42,7 +43,7 @@
   .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
   h2{font-size:14px;margin:0 0 10px;color:var(--muted);font-weight:600;letter-spacing:.3px}
   button{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);
-    border-radius:12px;padding:11px 15px;cursor:pointer;transition:.15s}
+    border-radius:12px;padding:11px 15px;cursor:pointer;transition:.15s;touch-action:manipulation}
   button:active{transform:scale(.985)}
   button.primary{background:var(--accent);border-color:var(--accent);color:#08121f;font-weight:700}
   button.ghost{background:transparent}
@@ -63,11 +64,11 @@
   .b-multi{background:#3a2a12;color:#ffc46b}
   .b-judge{background:#143a2b;color:#6fe0ad}
   .qno{font-size:12.5px;color:var(--dim);font-variant-numeric:tabular-nums}
-  .stem{font-size:17px;line-height:1.65;margin:0 0 14px;white-space:pre-wrap;word-break:break-word}
+  .stem{font-size:calc(17px * var(--fs));line-height:1.65;margin:0 0 14px;white-space:pre-wrap;word-break:break-word}
   .opts{display:flex;flex-direction:column;gap:9px}
   .opt{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;
     background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:13px 14px;
-    font-size:15.5px;line-height:1.5;cursor:pointer}
+    font-size:calc(15.5px * var(--fs));line-height:1.5;cursor:pointer}
   .opt .key{flex:0 0 26px;height:26px;border-radius:7px;background:#2b344a;display:flex;
     align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--muted)}
   .opt.sel{border-color:var(--accent);background:#16273c}
@@ -89,6 +90,28 @@
   .cell.ok{background:#123024;border-color:#1e5c43;color:#7ee0b0}
   .cell.no{background:#2b1418;border-color:#5e2430;color:#ff9aa4}
   .cell.done{background:#22304a;border-color:#33456a;color:#bcd3f5}
+  .cell.fav{border-color:var(--gold)}
+  .fav-btn{flex:0 0 auto;background:transparent;border:none;font-size:22px;line-height:1;
+    padding:2px 6px;color:var(--dim)}
+  .fav-btn.on{color:var(--gold)}
+  .statgrid{display:flex;gap:18px;flex-wrap:wrap}
+  .statgrid div{font-size:12.5px;color:var(--muted)}
+  .statgrid b{display:block;font-size:19px;color:var(--text);font-variant-numeric:tabular-nums;margin-top:2px}
+  .seg{display:flex;gap:6px}
+  .seg button{padding:8px 13px;font-size:13.5px}
+  /* 应用内弹窗 / 轻提示：不依赖浏览器 alert/confirm（部分 webview 会屏蔽它们） */
+  .dlg{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);
+    display:flex;align-items:center;justify-content:center;padding:22px}
+  .dlg-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    padding:18px;max-width:420px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  .dlg-msg{font-size:15px;line-height:1.68;white-space:pre-wrap;word-break:break-word;
+    max-height:62vh;overflow:auto;-webkit-user-select:text;user-select:text}
+  .dlg-input{display:block;width:100%;margin-top:12px;background:#0e121a;color:var(--text);
+    border:1px solid var(--line);border-radius:10px;padding:11px;font-size:15px}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + var(--safe-b));
+    z-index:70;background:#2a3346;color:var(--text);border:1px solid var(--line);
+    border-radius:999px;padding:10px 18px;font-size:13.5px;max-width:82vw;text-align:center;
+    box-shadow:0 6px 20px rgba(0,0,0,.4)}
   .big{font-size:42px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
   .sub{color:var(--muted);font-size:14px;margin-top:4px}
   .kpi{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
@@ -107,6 +130,7 @@
     padding:10px 14px calc(10px + var(--safe-b))}
   .bottombar .inner{max-width:760px;margin:0 auto;display:flex;gap:9px;align-items:center}
   .bottombar button{flex:1;padding:13px}
+  .bottombar button.icon{flex:0 0 48px;padding:13px 0;font-size:16px}
   .hide{display:none!important}
   .warnbar{background:#3a2f12;color:var(--warn);border:1px solid #5a4718;border-radius:12px;
     padding:11px 13px;font-size:12.5px;line-height:1.65;margin-bottom:12px}
@@ -170,6 +194,58 @@
         <button id="btnClearProgress" class="ghost">清除进度</button>
       </div>
     </div>
+
+    <div class="card" id="wrongCard" style="display:none">
+      <h2>错题本</h2>
+      <div class="hint" id="wrongInfo"></div>
+      <div class="row" style="margin-top:10px">
+        <button id="btnWrongBook" class="primary">回顾错题</button>
+        <button id="btnWrongPractice" class="ghost">只练错题</button>
+        <button id="btnWrongClear" class="ghost">清空</button>
+      </div>
+    </div>
+
+    <div class="card" id="favCard" style="display:none">
+      <h2>收藏夹</h2>
+      <div class="hint" id="favInfo"></div>
+      <div class="row" style="margin-top:10px">
+        <button id="btnFavList" class="primary">回顾收藏</button>
+        <button id="btnFavPractice" class="ghost">只练收藏</button>
+        <button id="btnFavClear" class="ghost">清空</button>
+      </div>
+    </div>
+
+    <div class="card" id="installCard" style="display:none">
+      <h2>安装到手机主屏幕</h2>
+      <div class="hint" id="installInfo"></div>
+      <div class="row" style="margin-top:10px">
+        <button id="btnInstall" class="primary hide">📲 立即安装</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>学习统计</h2>
+      <div class="statgrid" id="statGrid"></div>
+      <div class="hint" id="statHint" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card">
+      <h2>显示与行为</h2>
+      <div class="row" style="align-items:center;margin-bottom:12px">
+        <span class="hint" style="min-width:56px">正文字号</span>
+        <div class="seg">
+          <button id="fsSm" class="ghost">小</button>
+          <button id="fsMd" class="ghost">中</button>
+          <button id="fsLg" class="ghost">大</button>
+        </div>
+      </div>
+      <div class="row" style="align-items:center">
+        <span class="hint" style="min-width:56px">答对自动<br>下一题</span>
+        <button id="autoNextBtn" class="ghost">关</button>
+        <span class="hint">· 开关</span>
+        <button id="vibBtn" class="ghost">震动反馈：关</button>
+      </div>
+    </div>
   </section>
 
   <!-- ================= 答题 ================= -->
@@ -180,6 +256,7 @@
         <span class="qno" id="qno"></span>
         <span class="spacer"></span>
         <span class="qno" id="score"></span>
+        <button id="btnFav" class="fav-btn" title="收藏这道题">☆</button>
       </div>
       <p class="stem" id="stem"></p>
       <div class="opts" id="opts"></div>
@@ -202,6 +279,21 @@
       </div>
       <div class="wrongList" id="wrongList" style="margin-top:18px"></div>
       <div class="hint" id="rNote"></div>
+    </div>
+  </section>
+
+  <!-- ================= 错题本 ================= -->
+  <section id="v-wrong" class="view">
+    <div class="card">
+      <h2 id="wrongTitle">错题回顾</h2>
+      <div class="hint" id="wrongSummary"></div>
+      <div class="row" style="margin-top:12px">
+        <button id="btnWrongPractice2" class="primary">只练这些</button>
+        <button id="btnWrongCopy2" class="ghost">复制</button>
+        <button id="btnListClear" class="ghost">清空</button>
+        <button id="btnWrongBack" class="ghost">返回首页</button>
+      </div>
+      <div class="wrongList" id="wrongBookList" style="margin-top:16px"></div>
     </div>
   </section>
 
@@ -233,6 +325,13 @@ C. 已击穿短路
         <button id="btnSaveBank">保存为新题库</button>
         <button id="btnCancelImport" class="ghost">取消</button>
       </div>
+      <div class="hint" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
+        手机上不方便粘贴大段文字？可以让电脑上生成好的 <b>.json 题库文件</b>发到手机，用下面这个按钮导入。
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button id="btnJson">📄 从 JSON 文件导入</button>
+        <input type="file" id="jsonFile" accept=".json,application/json" class="hide" />
+      </div>
       <div class="hint" id="parseInfo" style="margin-top:12px"></div>
       <div id="parsePreview"></div>
     </div>
@@ -241,12 +340,26 @@ C. 已击穿短路
 
 <div class="bottombar hide" id="bottomQuiz">
   <div class="inner">
-    <button id="btnPrev" class="ghost">←</button>
+    <button id="btnExit" class="ghost icon" title="返回主菜单">🏠</button>
+    <button id="btnPrev" class="ghost icon">←</button>
     <button id="btnCheck" class="primary">确认</button>
     <button id="btnNext">下一题 →</button>
-    <button id="btnSubmit" class="ghost hide">交卷</button>
+    <button id="btnSubmit" class="ghost">完成</button>
   </div>
 </div>
+
+<!-- 应用内弹窗（替代 alert/confirm/prompt） -->
+<div id="dlg" class="dlg hide">
+  <div class="dlg-box">
+    <div class="dlg-msg" id="dlgMsg"></div>
+    <input id="dlgInput" class="dlg-input hide" />
+    <div class="row" style="margin-top:16px;justify-content:flex-end">
+      <button id="dlgCancel" class="ghost">取消</button>
+      <button id="dlgOk" class="primary">确定</button>
+    </div>
+  </div>
+</div>
+<div id="toast" class="toast hide"></div>
 
 <script>
 /* ==================== 基础工具 ==================== */
@@ -255,6 +368,8 @@ const LS = {
   banks: 'quiz.banks.v2',
   active: 'quiz.active.v2',
   prog: b => 'quiz.prog.v2::' + b,
+  fav: b => 'quiz.fav.v2::' + b,
+  stats: 'quiz.stats.v2',
   pref: 'quiz.pref.v2'
 };
 const LETTERS = 'ABCDEFGHIJKLMNOP';
@@ -281,6 +396,49 @@ function saveJSON(k, v) {
   catch (e) { if (storageOK) { storageOK = false; warnStorage(); } }
 }
 
+/* ==================== 应用内弹窗 ====================
+   部分环境（iOS「文件」快速查看、微信内置浏览器等）会静默屏蔽
+   alert / confirm / prompt ⇒ 按钮点了像坏了一样。全部改用自绘弹窗。 */
+let dlgCb = null;
+function uiShow(msg, opts) {
+  opts = opts || {};
+  $('#dlgMsg').textContent = msg;
+  const inp = $('#dlgInput');
+  if (opts.input) { inp.classList.remove('hide'); inp.value = opts.value || ''; }
+  else inp.classList.add('hide');
+  $('#dlgCancel').classList.toggle('hide', !opts.cancel);
+  $('#dlg').classList.remove('hide');
+}
+function uiAlert(msg) { dlgCb = null; uiShow(msg, { cancel: false }); }
+function uiConfirm(msg, cb) { dlgCb = cb; uiShow(msg, { cancel: true }); }
+function uiPrompt(msg, def, cb) { dlgCb = cb; uiShow(msg, { cancel: true, input: true, value: def }); }
+function uiClose() { $('#dlg').classList.add('hide'); dlgCb = null; }
+$('#dlgOk').onclick = () => {
+  const cb = dlgCb;
+  const hasInput = !$('#dlgInput').classList.contains('hide');
+  const val = $('#dlgInput').value;
+  uiClose();
+  if (cb) cb(hasInput ? val : true);
+};
+$('#dlgCancel').onclick = () => { const cb = dlgCb; uiClose(); if (cb) cb(null); };
+let toastTimer = null;
+function uiToast(msg, ms) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.remove('hide');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.classList.add('hide'); }, ms || 1700);
+}
+/* 复制文本：优先剪贴板；不可用时把内容显示在弹窗里让用户长按全选 */
+function copyText(text, okMsg) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => uiToast(okMsg || '已复制'), () => showCopyFallback(text));
+  } else showCopyFallback(text);
+}
+function showCopyFallback(text) {
+  uiShow('自动复制不可用。长按下面的文字全选后复制：\n\n' + text, { cancel: false });
+}
+
 /* ==================== 内置示例题库 ==================== */
 const DEMO_BANK = {
   id: 'demo',
@@ -299,11 +457,62 @@ if (!banks || !banks.length) { banks = [DEMO_BANK]; saveJSON(LS.banks, banks); }
 let activeId = loadJSON(LS.active, banks[0].id);
 if (!banks.some(b => b.id === activeId)) activeId = banks[0].id;
 
-let pref = loadJSON(LS.pref, { mode: 'practice', filter: 'all', random: false });
+let pref = loadJSON(LS.pref, { mode: 'practice', filter: 'all', random: false, font: 'md', autoNext: false, vibrate: false });
+if (!pref.font) pref.font = 'md';
 let quiz = null;   // { list, order, idx, answers, checked }
 
 const activeBank = () => banks.find(b => b.id === activeId) || banks[0];
 const bankKey = b => b.id + '::' + (b.questions ? b.questions.length : 0);
+
+/* ==================== 收藏 / 统计 / 显示 ==================== */
+const favKey = () => LS.fav(bankKey(activeBank()));
+function favList() {
+  const n = activeBank().questions.length;
+  return loadJSON(favKey(), []).filter(x => Number.isInteger(x) && x >= 0 && x < n);
+}
+function toggleFav(i) {
+  const list = favList();
+  const p = list.indexOf(i);
+  if (p >= 0) list.splice(p, 1); else list.push(i);
+  list.sort((a, b) => a - b);
+  saveJSON(favKey(), list);
+  return list.includes(i);
+}
+function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+const todayKey = () => ymd(new Date());
+function bumpStats(right) {
+  const s = loadJSON(LS.stats, { days: {} });
+  if (!s.days) s.days = {};
+  const k = todayKey();
+  s.days[k] = s.days[k] || { a: 0, r: 0 };
+  s.days[k].a++;
+  if (right) s.days[k].r++;
+  const keys = Object.keys(s.days).sort();
+  while (keys.length > 120) delete s.days[keys.shift()];
+  saveJSON(LS.stats, s);
+}
+function statsSummary() {
+  const s = loadJSON(LS.stats, { days: {} });
+  const days = s.days || {};
+  const tk = todayKey();
+  const t = days[tk] || { a: 0, r: 0 };
+  let streak = 0;
+  const d = new Date();
+  if (!(days[tk] && days[tk].a > 0)) d.setDate(d.getDate() - 1);
+  for (let i = 0; i < 400; i++) {
+    const k = ymd(d);
+    if (days[k] && days[k].a > 0) { streak++; d.setDate(d.getDate() - 1); } else break;
+  }
+  let total = 0, right = 0;
+  Object.keys(days).forEach(k => { total += days[k].a || 0; right += days[k].r || 0; });
+  return { today: t.a || 0, todayRight: t.r || 0, streak: streak, total: total, right: right, rate: total ? Math.round(right / total * 100) : 0 };
+}
+const FS_MAP = { sm: 0.9, md: 1, lg: 1.14 };
+function applyFont() { document.documentElement.style.setProperty('--fs', String(FS_MAP[pref.font] || 1)); }
+function buzz(ok) {
+  if (!pref.vibrate || !navigator.vibrate) return;
+  try { navigator.vibrate(ok ? 22 : [40, 55, 40]); } catch (e) {}
+}
 
 /* ==================== 题库文本解析 ==================== */
 const JUDGE_TRUE = /^(对|正确|是|√|✓|T|True|Y|yes)$/i;
@@ -357,6 +566,12 @@ function parseBankText(text, name) {
       }
       stemParts.push(l);
     });
+    // 兼容「题干 对/错」这种一行一题、答案在行尾的格式
+    if (ansRaw == null && stemParts.length) {
+      const joined = stemParts.join('\n');
+      const m2 = joined.match(/^(.*?)[\s　]*[（(]?\s*(对|错|正确|错误|√|×|✓|✗|T|F)\s*[）)]?[\s　]*$/);
+      if (m2 && m2[1].trim()) { stemParts = [m2[1].trim()]; ansRaw = m2[2]; }
+    }
     const stem = stemParts.join('\n').trim();
     if (!stem) { problems.push(`第 ${bi + 1} 段：找不到题干`); return; }
     if (ansRaw == null) { problems.push(`「${stem.slice(0, 20)}…」：没有答案行，已跳过`); return; }
@@ -387,7 +602,7 @@ function parseBankText(text, name) {
 
 /* ==================== 视图切换 ==================== */
 function show(v) {
-  ['home', 'quiz', 'result', 'import'].forEach(k => $('#v-' + k).classList.toggle('on', k === v));
+  ['home', 'quiz', 'result', 'import', 'wrong'].forEach(k => $('#v-' + k).classList.toggle('on', k === v));
   $('#bottomQuiz').classList.toggle('hide', v !== 'quiz');
   window.scrollTo(0, 0);
 }
@@ -405,11 +620,14 @@ function renderHome() {
     div.querySelector('[data-act="pick"]').onclick = () => { activeId = b.id; saveJSON(LS.active, activeId); renderHome(); };
     const del = div.querySelector('[data-act="del"]');
     if (del) del.onclick = () => {
-      if (!confirm(`删除题库「${b.name}」？`)) return;
-      banks = banks.filter(x => x.id !== b.id);
-      if (!banks.length) banks = [DEMO_BANK];
-      if (activeId === b.id) { activeId = banks[0].id; saveJSON(LS.active, activeId); }
-      saveJSON(LS.banks, banks); renderHome();
+      uiConfirm(`删除题库「${b.name}」？`, ok => {
+        if (!ok) return;
+        banks = banks.filter(x => x.id !== b.id);
+        if (!banks.length) banks = [DEMO_BANK];
+        if (activeId === b.id) { activeId = banks[0].id; saveJSON(LS.active, activeId); }
+        saveJSON(LS.banks, banks); renderHome();
+        uiToast('题库已删除');
+      });
     };
     list.appendChild(div);
   });
@@ -435,18 +653,143 @@ function renderHome() {
     $('#lastCard').style.display = '';
     $('#lastInfo').textContent = `未完成：第 ${(p.idx || 0) + 1} / ${p.order.length} 题，已作答 ${Object.keys(p.checked || {}).length} 题`;
   } else $('#lastCard').style.display = 'none';
+
+  const wi = wrongIdxList();
+  $('#wrongCard').style.display = wi.length ? '' : 'none';
+  $('#wrongInfo').textContent = `错题本里有 ${wi.length} 道题（做错或未作答的），可以随时回顾或集中重做。`;
+
+  const fi = favList();
+  $('#favCard').style.display = fi.length ? '' : 'none';
+  $('#favInfo').textContent = `收藏了 ${fi.length} 道题，可以随时回顾或集中刷。`;
+
+  const st = statsSummary();
+  const bankTotal = activeBank().questions.length;
+  const doneCount = Object.keys((loadJSON(LS.prog(bankKey(activeBank())), null) || {}).checked || {}).length;
+  $('#statGrid').innerHTML =
+    `<div>今日已刷<b>${st.today}</b></div>`
+    + `<div>今日正确率<b>${st.today ? Math.round(st.todayRight / st.today * 100) : 0}%</b></div>`
+    + `<div>连续打卡<b>${st.streak} 天</b></div>`
+    + `<div>累计做题<b>${st.total}</b></div>`
+    + `<div>累计正确率<b>${st.rate}%</b></div>`;
+  $('#statHint').textContent = st.total
+    ? `当前题库共 ${bankTotal} 题，已作答 ${doneCount} 题（${bankTotal ? Math.round(doneCount / bankTotal * 100) : 0}%）`
+    : `当前题库共 ${bankTotal} 题。开始刷题后这里会累计统计。`;
+
+  [['fsSm', 'sm'], ['fsMd', 'md'], ['fsLg', 'lg']].forEach(function (pr) {
+    const b = $('#' + pr[0]);
+    const on = (pref.font || 'md') === pr[1];
+    b.classList.toggle('on', on);
+    b.classList.toggle('ghost', !on);
+  });
+  $('#autoNextBtn').textContent = pref.autoNext ? '开' : '关';
+  $('#autoNextBtn').classList.toggle('on', !!pref.autoNext);
+  $('#vibBtn').textContent = '震动反馈：' + (pref.vibrate ? '开' : '关');
+  $('#vibBtn').classList.toggle('on', !!pref.vibrate);
+  renderInstall();
+}
+
+/* ==================== 错题本 ==================== */
+function wrongIdxList() {
+  const p = loadJSON(LS.prog(bankKey(activeBank())), null);
+  if (!p || !p.checked) return [];
+  return Object.keys(p.checked).filter(k => p.checked[k] === false)
+    .map(Number).filter(n => n >= 0 && n < activeBank().questions.length)
+    .sort((a, b) => a - b);
+}
+let listKind = 'wrong';
+const idxListOf = k => (k === 'fav' ? favList() : wrongIdxList());
+
+function renderList(kind) {
+  listKind = kind || listKind;
+  const isFavKind = listKind === 'fav';
+  const bank = activeBank().questions;
+  const idxs = idxListOf(listKind);
+  const p = loadJSON(LS.prog(bankKey(activeBank())), null) || {};
+  $('#wrongTitle').textContent = (isFavKind ? '收藏回顾 · ' : '错题回顾 · ') + activeBank().name;
+  $('#wrongSummary').textContent = idxs.length
+    ? (isFavKind
+      ? `收藏夹里有 ${idxs.length} 道题。点「只练这些」集中刷。`
+      : `共 ${idxs.length} 道错题。点「只练这些」重做——做对后会自动移出错题本。`)
+    : (isFavKind ? '收藏夹是空的。答题时点题目右上角的 ☆ 即可收藏。' : '错题本是空的 —— 目前没有做错的题。');
+  const list = $('#wrongBookList'); list.innerHTML = '';
+  idxs.forEach((bi, n) => {
+    const q = bank[bi];
+    if (!q) return;
+    const el = document.createElement('div');
+    el.className = 'item';
+    const mine = p.answers ? p.answers[String(bi)] : undefined;
+    el.innerHTML = `<div class="q"><b>${n + 1}.</b> [${TYPE_NAME[q.t]}] ${esc(q.q)}</div>
+      <div class="a">${(q.o || ['正确', '错误']).map((o, j) => `${q.t === 'judge' ? (j ? '×' : '√') : LETTERS[j]}. ${esc(o)}`).join('　')}
+      <br><em>正确答案：${ansText(q)}</em>` + (mine !== undefined ? `　<s>你的答案：${mineText(q, mine)}</s>` : '')
+      + (q.e ? `<br>${esc(q.e)}` : '') + '</div>';
+    list.appendChild(el);
+  });
+  $('#btnWrongPractice2').disabled = !idxs.length;
+  $('#btnListClear').disabled = !idxs.length;
+}
+function startListQuiz() {
+  const bank = activeBank().questions;
+  const idxs = idxListOf(listKind);
+  if (!idxs.length) { uiAlert(listKind === 'fav' ? '收藏夹是空的' : '错题本是空的，先去做几道题吧。'); return; }
+  const list = idxs.map(i => Object.assign({ _i: i }, bank[i]));
+  quiz = { list: list, order: list.map((_, i) => i), idx: 0, answers: {}, checked: {}, merge: true };
+  renderQuiz(); show('quiz');
+}
+function clearList() {
+  const idxs = idxListOf(listKind);
+  if (!idxs.length) { uiAlert('本来就是空的'); return; }
+  if (listKind === 'fav') {
+    uiConfirm(`清空收藏夹？会移除这 ${idxs.length} 道题的收藏标记。`, ok => {
+      if (!ok) return;
+      saveJSON(favKey(), []);
+      renderList('fav'); renderHome();
+      uiToast('收藏夹已清空');
+    });
+    return;
+  }
+  const key = bankKey(activeBank());
+  const p = loadJSON(LS.prog(key), null);
+  const ks = p && p.checked ? Object.keys(p.checked).filter(k => p.checked[k] === false) : [];
+  if (!ks.length) { uiAlert('错题本是空的'); return; }
+  uiConfirm(`清空错题本？会移除这 ${ks.length} 道题的作答记录（其它进度保留）。`, ok => {
+    if (!ok) return;
+    ks.forEach(k => { delete p.checked[k]; if (p.answers) delete p.answers[k]; });
+    saveJSON(LS.prog(key), p);
+    renderList('wrong'); renderHome();
+    uiToast('错题本已清空');
+  });
+}
+function copyList() {
+  const bank = activeBank().questions;
+  const idxs = idxListOf(listKind);
+  const p = loadJSON(LS.prog(bankKey(activeBank())), null) || {};
+  const isFavKind = listKind === 'fav';
+  const lines = [(isFavKind ? '【收藏】' : '【错题】') + activeBank().name + ' · ' + idxs.length + ' 题', ''];
+  idxs.forEach(bi => {
+    const q = bank[bi];
+    if (!q) return;
+    lines.push(`【${TYPE_NAME[q.t]}】${q.q}`);
+    (q.o || []).forEach((o, j) => lines.push(`  ${LETTERS[j]}. ${o}`));
+    lines.push(`  答案：${ansText(q)}` + (isFavKind ? '' : `　你的答案：${mineText(q, p.answers ? p.answers[String(bi)] : undefined)}`));
+    if (q.e) lines.push(`  解析：${q.e}`);
+    lines.push('');
+  });
+  const text = lines.join('\n');
+  copyText(text, '已复制 ' + idxs.length + ' 道题');
 }
 
 /* ==================== 开始 / 读取进度 ==================== */
 function pickQuestions() {
   const q = activeBank().questions;
-  const list = pref.filter === 'all' ? q.slice() : q.filter(x => x.t === pref.filter);
-  return list.map((x, i) => Object.assign({ _i: i }, x));
+  const list = [];
+  // _i 用「整个题库里的下标」，这样切换题型筛选不会让错题本对不上号
+  q.forEach((x, i) => { if (pref.filter === 'all' || x.t === pref.filter) list.push(Object.assign({ _i: i }, x)); });
+  return list;
 }
 
 function startQuiz(fromProgress) {
   const list = pickQuestions();
-  if (!list.length) { alert('这个筛选下没有题目'); return; }
+  if (!list.length) { uiAlert('这个筛选下没有题目'); return; }
   if (fromProgress) {
     const p = loadJSON(LS.prog(bankKey(activeBank())), null);
     if (p && p.order && p.order.length) {
@@ -463,7 +806,17 @@ function startQuiz(fromProgress) {
 
 function saveProgress() {
   if (!quiz) return;
-  saveJSON(LS.prog(bankKey(activeBank())), { order: quiz.order, idx: quiz.idx, answers: quiz.answers, checked: quiz.checked });
+  const key = bankKey(activeBank());
+  if (quiz.merge) {
+    // 子练习（只练错题）：结果并进题库级进度，不覆盖其它题
+    const p = loadJSON(LS.prog(key), null) || { order: null, idx: 0, answers: {}, checked: {} };
+    p.answers = p.answers || {}; p.checked = p.checked || {};
+    Object.keys(quiz.answers).forEach(k => { p.answers[k] = quiz.answers[k]; });
+    Object.keys(quiz.checked).forEach(k => { p.checked[k] = quiz.checked[k]; });
+    saveJSON(LS.prog(key), p);
+    return;
+  }
+  saveJSON(LS.prog(key), { order: quiz.order, idx: quiz.idx, answers: quiz.answers, checked: quiz.checked });
 }
 
 /* ==================== 答题渲染 ==================== */
@@ -495,6 +848,10 @@ function renderQuiz() {
   const done = Object.keys(quiz.checked).length;
   let right = 0; Object.keys(quiz.checked).forEach(x => { if (quiz.checked[x]) right++; });
   $('#score').textContent = practice ? `已答 ${done} · 正确 ${right}` : `已答 ${done}`;
+  const favSet = new Set(favList());
+  const onFav = favSet.has(q._i);
+  $('#btnFav').textContent = onFav ? '★' : '☆';
+  $('#btnFav').className = 'fav-btn' + (onFav ? ' on' : '');
   $('#bar').style.width = (quiz.order.length ? Math.round(done / quiz.order.length * 100) : 0) + '%';
   $('#stem').textContent = q.q;
 
@@ -543,6 +900,7 @@ function renderQuiz() {
     if (quiz.checked[key] === true) c.classList.add('ok');
     else if (quiz.checked[key] === false) c.classList.add('no');
     else if (quiz.answers[key] !== undefined) c.classList.add('done');
+    if (favSet.has(qq._i)) c.classList.add('fav');
     if (n === quiz.idx) c.classList.add('cur');
     c.onclick = () => { quiz.idx = n; saveProgress(); renderQuiz(); };
     g.appendChild(c);
@@ -550,18 +908,38 @@ function renderQuiz() {
 
   const answered = quiz.answers[k] !== undefined && !(Array.isArray(quiz.answers[k]) && !quiz.answers[k].length);
   $('#btnCheck').classList.toggle('hide', !practice || quiz.checked[k] !== undefined);
-  $('#btnCheck').disabled = !answered;
+  // 不设 disabled：没选答案时点它会给明确提示，而不是"点了没反应"
+  $('#btnCheck').classList.toggle('on', answered);
   $('#btnPrev').disabled = quiz.idx === 0;
   $('#btnNext').disabled = quiz.idx >= quiz.order.length - 1;
-  $('#btnSubmit').classList.toggle('hide', practice);
+  $('#btnSubmit').textContent = practice ? '完成' : '交卷';
   saveProgress();
 }
 
 function checkCur() {
   const q = curQ(), k = curKey();
-  if (!q || quiz.answers[k] === undefined) return;
-  quiz.checked[k] = isRight(q, quiz.answers[k]);
+  if (!q) return;
+  const v = quiz.answers[k];
+  if (v === undefined || (Array.isArray(v) && !v.length)) {
+    // 以前这里静默 return，用户点了没反应会以为按钮坏了
+    uiToast(q.t === 'multi' ? '请先选择答案（多选可选多项）' : '请先选择一个答案');
+    return;
+  }
+  const isNew = quiz.checked[k] === undefined;
+  quiz.checked[k] = isRight(q, v);
+  if (isNew) { bumpStats(quiz.checked[k]); buzz(quiz.checked[k]); }
   renderQuiz();
+  // 答对后自动下一题（只对答对的，错的要留时间看解析）
+  if (isNew && quiz.checked[k] && pref.autoNext && pref.mode === 'practice' && quiz.idx < quiz.order.length - 1) {
+    const from = quiz.idx;
+    setTimeout(() => {
+      if (!quiz || quiz.idx !== from) return;
+      if (!pref.autoNext || !$('#v-quiz').classList.contains('on')) return;
+      quiz.idx++;
+      saveProgress();
+      renderQuiz();
+    }, 650);
+  }
 }
 
 function submitQuiz() {
@@ -571,7 +949,9 @@ function submitQuiz() {
     const t = byType[q.t] = byType[q.t] || { n: 0, r: 0 }; t.n++;
     const v = quiz.answers[k];
     if (v === undefined || (Array.isArray(v) && !v.length)) { blank++; quiz.checked[k] = false; return; }
-    const ok = isRight(q, v); quiz.checked[k] = ok;
+    const ok = isRight(q, v);
+    if (quiz.checked[k] === undefined) bumpStats(ok);
+    quiz.checked[k] = ok;
     if (ok) { right++; t.r++; } else wrong++;
   });
   saveProgress(); showResult(right, wrong, blank, byType);
@@ -628,12 +1008,65 @@ $('#btnParse').onclick = () => {
 };
 $('#btnSaveBank').onclick = () => {
   if (!parsed || !parsed.bank.questions.length) { $('#parseInfo').textContent = '先点「解析预览」，且要至少解析出 1 道题。'; return; }
-  const name = prompt('给这个题库起个名字：', '题库 ' + new Date().toLocaleDateString());
-  if (name === null) return;
-  parsed.bank.name = (name || '').trim() || ('题库 ' + Date.now());
-  banks.push(parsed.bank); activeId = parsed.bank.id;
-  saveJSON(LS.banks, banks); saveJSON(LS.active, activeId);
-  parsed = null; $('#importText').value = ''; $('#parseInfo').textContent = '已保存。'; renderHome(); show('home');
+  uiPrompt('给这个题库起个名字：', '题库 ' + new Date().toLocaleDateString(), v => {
+    if (v === null) return;
+    parsed.bank.name = String(v || '').trim() || ('题库 ' + Date.now());
+    banks.push(parsed.bank); activeId = parsed.bank.id;
+    saveJSON(LS.banks, banks); saveJSON(LS.active, activeId);
+    parsed = null; $('#importText').value = ''; $('#parseInfo').textContent = '已保存。';
+    renderHome(); show('home');
+    uiToast('题库已导入');
+  });
+};
+
+/* ==================== 从 JSON 文件导入 ==================== */
+$('#btnJson').onclick = () => $('#jsonFile').click();
+$('#jsonFile').onchange = e => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      const data = JSON.parse(fr.result);
+      const qs = Array.isArray(data) ? data : (data && Array.isArray(data.questions) ? data.questions : []);
+      if (!qs.length) throw new Error('文件里没有找到 questions 数组');
+      const clean = [];
+      qs.forEach(q => {
+        if (!q || !q.q) return;
+        let t = q.t;
+        if (t !== 'judge' && t !== 'single' && t !== 'multi') t = 'judge';
+        if (t === 'judge') {
+          if (typeof q.a !== 'boolean') return;
+          clean.push(Object.assign({ t, q: String(q.q), a: q.a }, q.e ? { e: String(q.e) } : {}));
+        } else {
+          if (!Array.isArray(q.o) || q.o.length < 2) return;
+          let a;
+          if (t === 'multi') {
+            a = (Array.isArray(q.a) ? q.a : [q.a]).map(Number)
+              .filter(n => Number.isInteger(n) && n >= 0 && n < q.o.length);
+            a = Array.from(new Set(a)).sort((x, y) => x - y);
+            if (!a.length) return;
+          } else {
+            a = Number(q.a);
+            if (!Number.isInteger(a) || a < 0 || a >= q.o.length) return;
+          }
+          clean.push(Object.assign({ t, q: String(q.q), o: q.o.map(String), a }, q.e ? { e: String(q.e) } : {}));
+        }
+      });
+      if (!clean.length) throw new Error('文件里没有有效题目');
+      const name = (data && data.name) ? String(data.name) : f.name.replace(/\.json$/i, '');
+      banks.push({ id: 'b' + Date.now().toString(36), name: name, questions: clean });
+      activeId = banks[banks.length - 1].id;
+      saveJSON(LS.banks, banks); saveJSON(LS.active, activeId);
+      const bad = qs.length - clean.length;
+      uiAlert(`已导入「${name}」\n共 ${clean.length} 题` + (bad > 0 ? `（跳过 ${bad} 条无效）` : ''));
+      renderHome(); show('home');
+    } catch (err) {
+      uiAlert('导入失败：' + (err && err.message ? err.message : err));
+    }
+    e.target.value = '';
+  };
+  fr.readAsText(f, 'utf-8');
 };
 
 /* ==================== 导出 ==================== */
@@ -656,33 +1089,62 @@ $('#fMulti').onclick = () => { pref.filter = 'multi'; saveJSON(LS.pref, pref); r
 $('#randBtn').onclick = () => { pref.random = !pref.random; saveJSON(LS.pref, pref); renderHome(); };
 $('#btnStart').onclick = () => startQuiz(false);
 $('#btnResume').onclick = () => startQuiz(true);
-$('#btnClearProgress').onclick = () => { localStorage.removeItem(LS.prog(bankKey(activeBank()))); renderHome(); };
+$('#btnClearProgress').onclick = () => {
+  uiConfirm('清除本轮的答题进度？\n（题库、统计和其它记录不受影响）', ok => {
+    if (!ok) return;
+    try { localStorage.removeItem(LS.prog(bankKey(activeBank()))); } catch (e) {}
+    renderHome(); uiToast('进度已清除');
+  });
+};
 $('#btnPrev').onclick = () => { if (quiz.idx > 0) { quiz.idx--; saveProgress(); renderQuiz(); } };
 $('#btnNext').onclick = () => { if (quiz.idx < quiz.order.length - 1) { quiz.idx++; saveProgress(); renderQuiz(); } };
 $('#btnCheck').onclick = checkCur;
-$('#btnSubmit').onclick = () => { if (confirm('交卷并查看成绩？')) submitQuiz(); };
+$('#btnSubmit').onclick = () => {
+  const msg = (pref.mode === 'practice') ? '结束本轮，查看成绩与错题？' : '交卷并查看成绩？';
+  uiConfirm(msg, ok => { if (ok) submitQuiz(); });
+};
+/* 返回主菜单：直接返回，不弹确认框（进度本来就自动保存；
+   而弹窗在 iOS 快速查看/微信内置浏览器里会被屏蔽，导致按钮像坏的） */
+$('#btnExit').onclick = () => { renderHome(); show('home'); uiToast('已返回主菜单 · 进度已保存'); };
 $('#btnHome').onclick = () => { renderHome(); show('home'); };
+$('#btnWrongBook').onclick = () => { renderList('wrong'); show('wrong'); };
+$('#btnWrongPractice').onclick = () => { listKind = 'wrong'; startListQuiz(); };
+$('#btnWrongPractice2').onclick = startListQuiz;
+$('#btnWrongClear').onclick = () => { listKind = 'wrong'; clearList(); };
+$('#btnWrongCopy2').onclick = copyList;
+$('#btnListClear').onclick = clearList;
+$('#btnWrongBack').onclick = () => { renderHome(); show('home'); };
+$('#btnFavList').onclick = () => { renderList('fav'); show('wrong'); };
+$('#btnFavPractice').onclick = () => { listKind = 'fav'; startListQuiz(); };
+$('#btnFavClear').onclick = () => { listKind = 'fav'; clearList(); };
+$('#btnFav').onclick = () => { if (!quiz || !curQ()) return; toggleFav(curQ()._i); renderQuiz(); };
 $('#btnRestart').onclick = () => startQuiz(false);
-$('#btnWrongOnly').onclick = () => {
-  const wrong = quiz.list.filter(q => quiz.checked[String(q._i)] === false);
-  if (!wrong.length) { alert('没有错题'); return; }
-  quiz = { list: wrong.map((q, i) => Object.assign({ _i: i }, q)), order: wrong.map((_, i) => i), idx: 0, answers: {}, checked: {} };
-  renderQuiz(); show('quiz');
-};
-$('#btnCopyWrong').onclick = () => {
-  const lines = [];
-  quiz.order.forEach((oi, i) => {
-    const q = quiz.list[oi], k = String(q._i);
-    if (quiz.checked[k] !== false) return;
-    lines.push(`【${TYPE_NAME[q.t]}】${q.q}`);
-    (q.o || []).forEach((o, j) => lines.push(`  ${LETTERS[j]}. ${o}`));
-    lines.push(`  答案：${ansText(q)}` + (q.e ? `\n  解析：${q.e}` : ''));
-    lines.push('');
-  });
-  const text = lines.join('\n') || '（无错题）';
-  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => alert('错题已复制'), () => prompt('复制下面内容：', text));
-  else prompt('复制下面内容：', text);
-};
+$('#btnWrongOnly').onclick = () => { listKind = 'wrong'; startListQuiz(); };
+$('#fsSm').onclick = () => { pref.font = 'sm'; saveJSON(LS.pref, pref); applyFont(); renderHome(); };
+$('#fsMd').onclick = () => { pref.font = 'md'; saveJSON(LS.pref, pref); applyFont(); renderHome(); };
+$('#fsLg').onclick = () => { pref.font = 'lg'; saveJSON(LS.pref, pref); applyFont(); renderHome(); };
+$('#autoNextBtn').onclick = () => { pref.autoNext = !pref.autoNext; saveJSON(LS.pref, pref); renderHome(); };
+$('#vibBtn').onclick = () => { pref.vibrate = !pref.vibrate; saveJSON(LS.pref, pref); renderHome(); if (pref.vibrate) buzz(true); };
+
+/* 左右滑动切题（移动端） */
+(function () {
+  let sx = 0, sy = 0, tracking = false;
+  const zone = $('#v-quiz');
+  zone.addEventListener('touchstart', e => {
+    const t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; tracking = true;
+  }, { passive: true });
+  zone.addEventListener('touchend', e => {
+    if (!tracking) return;
+    tracking = false;
+    if (!$('#v-quiz').classList.contains('on')) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 2) return;
+    if (dx < 0) { if (!$('#btnNext').disabled) $('#btnNext').click(); }
+    else { if (!$('#btnPrev').disabled) $('#btnPrev').click(); }
+  }, { passive: true });
+})();
+$('#btnCopyWrong').onclick = () => { listKind = 'wrong'; copyList(); };
 
 /* 键盘（桌面端方便） */
 document.addEventListener('keydown', e => {
@@ -699,9 +1161,65 @@ document.addEventListener('keydown', e => {
   if (n >= 1 && n <= 9) { const b = $('#opts').children[n - 1]; if (b && b.onclick) b.click(); }
 });
 
+/* ==================== 安装引导（iOS / 安卓 分别给不同指引） ==================== */
+let deferredPrompt = null;
+function isStandalone() {
+  try {
+    if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+  } catch (e) {}
+  return navigator.standalone === true;
+}
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1);
+}
+function renderInstall() {
+  const card = $('#installCard'), info = $('#installInfo'), btn = $('#btnInstall');
+  if (!card) return;
+  if (isStandalone()) { card.style.display = 'none'; return; }   // 已经是装好的 App 了
+  card.style.display = '';
+  if (location.protocol === 'file:') {
+    info.innerHTML = '你现在打开的是<b>本地文件</b>。系统不允许把本地文件「添加到主屏幕」，进度也可能存不住。<br>'
+      + '想让 iOS / 安卓都像 App 一样用（独立图标、全屏、离线、进度保留），需要用<b>网址</b>打开这份文件——'
+      + '把它放到任意静态托管上即可（GitHub Pages / Netlify 都行）。';
+    btn.classList.add('hide');
+    return;
+  }
+  if (deferredPrompt) {
+    info.textContent = '这台设备支持一键安装：点下面的按钮，或从浏览器菜单选「安装应用」。装好后有独立图标、全屏、可离线。';
+    btn.classList.remove('hide');
+    return;
+  }
+  if (isIOS()) {
+    info.innerHTML = '<b>iPhone / iPad：</b>用 <b>Safari</b> 打开本页 → 点底部中间的「分享」按钮 → 往下找到「<b>添加到主屏幕</b>」→ 添加。<br>装好后有独立图标、全屏、可离线。';
+  } else {
+    info.innerHTML = '<b>安卓：</b>点浏览器菜单（⋮）→「<b>安装应用</b>」或「添加到主屏幕」。<br>装好后有独立图标、全屏、可离线。';
+  }
+  btn.classList.add('hide');
+}
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  renderInstall();
+});
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  renderInstall();
+  uiToast('已安装到主屏幕');
+});
+$('#btnInstall').onclick = () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const p = deferredPrompt.userChoice;
+  if (p && p.then) p.then(() => { deferredPrompt = null; renderInstall(); }, () => {});
+  else { deferredPrompt = null; renderInstall(); }
+};
+
 /* ==================== 启动 ==================== */
 if (!storageCheck()) { storageOK = false; warnStorage(); }
+applyFont();
 renderHome();
+renderInstall();
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }
