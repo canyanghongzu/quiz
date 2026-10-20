@@ -1,7 +1,7 @@
 /* 刷题 PWA · Service Worker
    策略：预缓存应用外壳 → 之后 cache-first，保证离线可用。
    题库数据存在 localStorage，不经过 SW。 */
-const CACHE = 'quiz-shell-v4';
+const CACHE = 'quiz-shell-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -34,6 +34,8 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
+  // 音频文件较大，不走缓存
+  if (/\.(wav|mp3|m4a|ogg)$/i.test(url.pathname)) return;
 
   // 页面导航：优先网络，失败回退到缓存的外壳（离线也能打开）
   if (req.mode === 'navigate') {
