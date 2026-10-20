@@ -1,7 +1,7 @@
 /* 刷题 PWA · Service Worker
    策略：预缓存应用外壳 → 之后 cache-first，保证离线可用。
    题库数据存在 localStorage，不经过 SW。 */
-const CACHE = 'quiz-shell-v8';
+const CACHE = 'quiz-shell-v10';
 const ASSETS = [
   './',
   './index.html',
