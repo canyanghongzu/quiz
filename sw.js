@@ -1,11 +1,10 @@
 /* 刷题 PWA · Service Worker
    策略：预缓存应用外壳 → 之后 cache-first，保证离线可用。
    题库数据存在 localStorage，不经过 SW。 */
-const CACHE = 'quiz-shell-v10';
+const CACHE = 'quiz-shell-v11';
 const ASSETS = [
   './',
   './index.html',
-  './电工高级-单选题.json',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
